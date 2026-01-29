@@ -3,441 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jasnoor Saluja | Interactive Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800;900&display=swap');
-        
-        :root {
-            --cursor-size: 20px;
-            --cursor-hover-size: 60px;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d0d0d;
-            color: #ffffff;
-            cursor: none; /* Hide default cursor */
-            overflow-x: hidden;
-        }
-
-        /* 1. GRAIN OVERLAY */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* 2. CUSTOM CURSOR */
-        .custom-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--cursor-size);
-            height: var(--cursor-size);
-            border: 2px solid white;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s, mix-blend-mode 0.3s;
-            mix-blend-mode: difference;
-        }
-
-        .custom-cursor.hovered {
-            width: var(--cursor-hover-size);
-            height: var(--cursor-hover-size);
-            background-color: white;
-            mix-blend-mode: difference;
-        }
-
-        /* 3. HERO LAYER (FIXED) */
-        /* This stays behind while content scrolls over it */
-        .hero-fixed-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 0; /* Behind content */
-            pointer-events: none; /* Allow clicks to pass through empty areas */
-            overflow: hidden;
-        }
-
-        /* 4. SCROLLING CONTENT LAYER */
-        /* This sits on top and scrolls over the hero */
-        .content-scroll-layer {
-            position: relative;
-            z-index: 10;
-            margin-top: 100vh; /* Start below the fold */
-            background-color: transparent; /* Transparent to see hero initially */
-            pointer-events: auto;
-        }
-
-        /* 5. DRAGGABLE ELEMENTS */
-        .draggable {
-            position: absolute;
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            pointer-events: auto; /* Re-enable pointer events for these specific items */
-            will-change: transform, left, top;
-        }
-        
-        .draggable:active {
-            cursor: grabbing;
-            z-index: 50 !important;
-        }
-
-        /* 6. FLOATING MEDIA CARDS (PARALLAX) */
-        .parallax-card {
-            transition: transform 0.1s linear; /* Smooth parallax update */
-            will-change: transform;
-        }
-
-        .media-placeholder {
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .media-placeholder video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .media-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.2);
-            transition: background 0.3s;
-        }
-        .media-placeholder:hover .media-overlay {
-            background: rgba(0,0,0,0);
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .hero-fixed-layer {
-                position: relative;
-                height: auto;
-                min-height: 100vh;
-                padding-top: 80px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .content-scroll-layer {
-                margin-top: 0;
-            }
-            .draggable {
-                position: relative;
-                left: auto !important;
-                top: auto !important;
-                transform: none !important;
-                margin-bottom: 2rem;
-                width: 90%;
-            }
-        }
-    </style>
+    <title>Jasnoor Saluja | Visual Storyteller</title>
+    <link rel="stylesheet" href="css/style.css?v=15">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Noise Filter -->
-    <div class="noise-overlay"></div>
-
-    <!-- Custom Cursor -->
-    <div id="cursor" class="custom-cursor hidden md:block"></div>
-
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full p-6 z-50 flex justify-between items-center mix-blend-difference text-white">
-        <a href="#" class="text-xl font-bold tracking-tighter hoverable">JASNOOR.</a>
-        <div class="space-x-6 text-sm font-medium hidden md:block">
-            <a href="#work-gallery" class="hover:underline hoverable">Works</a>
-            <a href="#assistant" class="hover:underline hoverable">Assistant</a>
-            <a href="#contact" class="hover:underline hoverable">Contact</a>
+    <!-- ============================================
+         LOADING SCREEN
+         ============================================ -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-text">JASNOOR</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
         </div>
-        <a href="#contact" class="md:hidden hoverable"><i class="fas fa-bars"></i></a>
+    </div>
+
+    <!-- ============================================
+         GLASS NAVBAR
+         ============================================ -->
+    <nav class="navbar">
+        <a href="#" class="logo">JASNOOR</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#about">Studio</a></li>
+            <li><a href="#services">Skills</a></li>
+        </ul>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+            <a href="#contact" class="nav-contact">Contact</a>
+        </div>
     </nav>
 
-    <!-- LAYER 0: FIXED HERO (The "Static" Back Layer) -->
-    <!-- These elements stay in view while you scroll, until covered -->
-    <div class="hero-fixed-layer bg-[#0d0d0d]">
-        
-        <!-- Draggable Title -->
-        <div class="draggable md:top-[15%] md:left-[5%]" id="drag-title">
-            <h1 class="text-6xl md:text-[9rem] font-black tracking-tighter leading-[0.85] pointer-events-none select-none text-white mix-blend-exclusion">
-                VISUAL<br>
-                STORY<br>
-                TELLER
-            </h1>
-        </div>
-
-        <!-- Draggable Photo -->
-        <div class="draggable md:top-[20%] md:right-[15%] hoverable" id="drag-photo">
-            <div class="w-64 h-64 md:w-80 md:h-80 bg-[#1a1a1a] border border-gray-700 rounded-full flex items-center justify-center relative overflow-hidden group shadow-2xl">
-                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-20 group-hover:opacity-40 transition"></div>
-                <div class="text-center">
-                    <i class="fas fa-user text-5xl mb-2 text-gray-500"></i>
-                    <p class="text-xs uppercase tracking-widest text-gray-500">Photo Here</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Draggable Bio Sticker -->
-        <div class="draggable md:bottom-[20%] md:left-[15%] hoverable" id="drag-bio">
-            <div class="bg-[#f0f0f0] text-black p-6 w-full md:w-72 shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)] transform md:-rotate-6 hover:rotate-0 transition-transform duration-300">
-                <div class="flex justify-between items-center border-b border-black pb-2 mb-2">
-                    <span class="text-xs font-bold uppercase">Bio.txt</span>
-                    <i class="fas fa-times"></i>
-                </div>
-                <p class="text-sm font-medium leading-relaxed font-mono">
-                    Moved to Canada 4 years ago. Passionate about creating stories and storyboarding visual narratives before they hit the screen.
-                </p>
-            </div>
-        </div>
-
-        <!-- Draggable Canada Sticker -->
-        <div class="draggable md:bottom-[35%] md:right-[25%] hoverable" id="drag-sticker">
-            <div class="w-32 h-32 rounded-full bg-[#ff3333] flex items-center justify-center text-white font-black text-center shadow-xl transform md:rotate-12 hover:scale-110 transition border-4 border-white">
-                EST.<br>2020<br>CANADA
-            </div>
+    <!-- ============================================
+         HERO SECTION - Mouse Tracking Images
+         ============================================ -->
+    <section id="home" class="hero">
+        <!-- Background images that appear on mouse movement -->
+        <div class="hero-bg-container">
+            <img src="images/project1.jpg" alt="" class="hero-bg-image">
+            <img src="images/project2.jpg" alt="" class="hero-bg-image">
+            <img src="images/project3.jpg" alt="" class="hero-bg-image">
+            <img src="images/project4.jpg" alt="" class="hero-bg-image">
+            <img src="images/project10.jpg" alt="" class="hero-bg-image">
+            <img src="images/project11.jpg" alt="" class="hero-bg-image">
         </div>
         
-        <!-- Scroll Indicator (Absolute bottom of viewport) -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 md:block hidden animate-bounce pointer-events-none">
-            <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Scroll to Explore</p>
-            <i class="fas fa-arrow-down text-white mx-auto block"></i>
+        <div class="hero-content">
+            <p class="hero-subtitle">Visual Storyteller</p>
+            <h1 class="hero-title">JASNOOR</h1>
+            <p class="hero-location">Based in Canada · Est. 2020</p>
         </div>
-    </div>
 
+        <div class="scroll-indicator">
+            <span class="scroll-text">Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
 
-    <!-- LAYER 1: SCROLLING CONTENT (Covers the Hero) -->
-    <div class="content-scroll-layer">
-        
-        <!-- SECTION: FLOATING MEDIA GALLERY (The "Cover" Effect) -->
-        <section id="work-gallery" class="w-full relative px-4 md:px-12 pb-32 pt-20">
-            <!-- Background to ensure it covers the hero text -->
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0d] to-[#0d0d0d] pointer-events-none -z-10 h-[50vh]"></div>
-            <div class="absolute inset-0 top-[40vh] bg-[#0d0d0d] -z-10"></div>
-
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 relative">
-                
-                <!-- Media Item 1 (Left, Moves Faster) -->
-                <div class="parallax-card mt-0 md:-mt-32" data-speed="0.05">
-                    <a href="https://www.instagram.com/reel/DHBWYqbMLMK/?igsh=MWo0ZGI0YzdtcjYwMg==" target="_blank" class="block aspect-[4/5] bg-neutral-800 rounded-sm overflow-hidden relative hoverable group border border-neutral-700">
-                        <!-- Simulate Video Placeholder -->
-                        <div class="media-placeholder bg-neutral-800 flex items-center justify-center">
-                            <i class="fab fa-instagram text-6xl text-neutral-600 group-hover:text-white transition"></i>
-                        </div>
-                        <div class="media-overlay"></div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <h3 class="text-3xl font-bold text-white mb-1">Project 01</h3>
-                            <p class="text-sm text-gray-400">Instagram Reel</p>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Media Item 2 (Right, Moves Slower) -->
-                <div class="parallax-card mt-20 md:mt-48" data-speed="-0.03">
-                    <a href="https://www.instagram.com/reel/DEkLYkBpfUV/?igsh=MXBsOXozOWx2ZXhzZw==" target="_blank" class="block aspect-[4/5] bg-neutral-800 rounded-sm overflow-hidden relative hoverable group border border-neutral-700">
-                        <div class="media-placeholder bg-neutral-800 flex items-center justify-center">
-                             <i class="fab fa-instagram text-6xl text-neutral-600 group-hover:text-white transition"></i>
-                        </div>
-                        <div class="media-overlay"></div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <h3 class="text-3xl font-bold text-white mb-1">Project 02</h3>
-                            <p class="text-sm text-gray-400">Instagram Reel</p>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Media Item 3 (Left, Featured) -->
-                <div class="parallax-card mt-10 md:mt-0" data-speed="0.08">
-                    <a href="https://www.instagram.com/reel/DFtAvD1p38y/?igsh=MXhoMG5xMzdsdWMwY" target="_blank" class="block aspect-[16/9] md:aspect-[4/3] bg-indigo-900/20 rounded-sm overflow-hidden relative hoverable group border border-indigo-500/50">
-                        <div class="media-placeholder bg-neutral-800 flex items-center justify-center">
-                             <i class="fas fa-video text-6xl text-indigo-500 group-hover:scale-110 transition"></i>
-                        </div>
-                        <div class="media-overlay"></div>
-                        <div class="absolute top-4 right-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1 uppercase">Featured</div>
-                        <div class="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/80 to-transparent">
-                            <h3 class="text-3xl font-bold text-white mb-1">Production & Edit</h3>
-                            <p class="text-sm text-gray-300">Role: Shooting & Editing</p>
-                        </div>
-                    </a>
-                </div>
-
-                 <!-- Media Item 4 (Right, Volunteer) -->
-                 <div class="parallax-card mt-10 md:mt-32" data-speed="-0.05">
-                    <a href="https://www.instagram.com/reel/CzPvjSEOeTs/?igsh=cmVvMGY3dXQzem80" target="_blank" class="block aspect-[4/5] bg-neutral-800 rounded-sm overflow-hidden relative hoverable group border border-pink-500/30">
-                        <div class="media-placeholder bg-neutral-800 flex items-center justify-center">
-                             <i class="fas fa-heart text-6xl text-pink-700 group-hover:text-pink-500 transition"></i>
-                        </div>
-                        <div class="media-overlay"></div>
-                         <div class="absolute top-4 right-4 bg-pink-600 text-white text-xs font-bold px-3 py-1 uppercase">Volunteer</div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <h3 class="text-3xl font-bold text-white mb-1">Community</h3>
-                            <p class="text-sm text-gray-400">Event Coverage</p>
-                        </div>
-                    </a>
-                </div>
-
+    <!-- ============================================
+         MARQUEE - Services (Light)
+         ============================================ -->
+    <section class="marquee-section">
+        <div class="marquee-track">
+            <div class="marquee-content">
+                <span class="marquee-item">Video Production</span>
+                <span class="marquee-item">Content Creation</span>
+                <span class="marquee-item">Storyboarding</span>
+                <span class="marquee-item">Social Media</span>
+                <span class="marquee-item">Digital Marketing</span>
+                <span class="marquee-item">Video Editing</span>
+                <span class="marquee-item">Brand Strategy</span>
+                <span class="marquee-item">Creative Direction</span>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- SECTION: TIKTOK ASSISTANT (Grid) -->
-        <section id="assistant" class="py-32 px-6 bg-white text-black relative">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-20 border-b-2 border-black pb-8">
-                     <h2 class="text-5xl md:text-8xl font-black tracking-tighter leading-none">DIGITAL<br>ASSISTANT</h2>
-                     <p class="text-xl font-mono md:mb-4">TikTok Campaigns</p>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <!-- TikTok Items -->
-                    <a href="https://vt.tiktok.com/ZSa8PQkQ5/" target="_blank" class="aspect-[9/16] bg-black text-white p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-20">01</span></div>
-                    </a>
-                    <a href="https://vt.tiktok.com/ZSa8fcmNP/" target="_blank" class="aspect-[9/16] bg-[#f0f0f0] text-black border border-black p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-10">02</span></div>
-                    </a>
-                     <a href="https://vt.tiktok.com/ZSa8PMMrm/" target="_blank" class="aspect-[9/16] bg-black text-white p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-20">03</span></div>
-                    </a>
-                     <a href="https://vt.tiktok.com/ZSa8f7yog/" target="_blank" class="aspect-[9/16] bg-[#f0f0f0] text-black border border-black p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-10">04</span></div>
-                    </a>
-                     <a href="https://vt.tiktok.com/ZSa8P809N/" target="_blank" class="aspect-[9/16] bg-black text-white p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-20">05</span></div>
-                    </a>
-                     <a href="https://vt.tiktok.com/ZSa8PVNxv/" target="_blank" class="aspect-[9/16] bg-[#f0f0f0] text-black border border-black p-4 flex flex-col justify-between hover:scale-105 transition duration-300 hoverable">
-                        <i class="fab fa-tiktok text-3xl"></i>
-                        <div><span class="text-5xl font-black opacity-10">06</span></div>
-                    </a>
+    <!-- ============================================
+         ROTATING CIRCLES SECTION
+         ============================================ -->
+    <section class="rotating-circles">
+        <div class="circles-container">
+            <!-- Outer circle with rotating text -->
+            <div class="circle circle-outer">
+                <div class="rotating-text">
+                    <svg viewBox="0 0 500 500">
+                        <defs>
+                            <path id="circlePath" d="M 250, 250 m -200, 0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0"/>
+                        </defs>
+                        <text>
+                            <textPath href="#circlePath">
+                                VIDEO PRODUCTION • STORYTELLING • CONTENT CREATION • VISUAL DESIGN • 
+                            </textPath>
+                        </text>
+                    </svg>
                 </div>
             </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer id="contact" class="bg-[#0d0d0d] py-32 px-6 border-t border-gray-900 relative">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-6xl md:text-9xl font-black mb-16 hoverable text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-800">LET'S TALK</h2>
-                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-16">
-                    <a href="mailto:salujajasnoor1603@gmail.com" class="text-xl md:text-2xl font-mono hover:text-indigo-400 hoverable underline decoration-1 underline-offset-8">salujajasnoor1603@gmail.com</a>
-                    <a href="https://www.linkedin.com/in/jasnoor-saluja-03740b1b9/" target="_blank" class="text-xl md:text-2xl font-mono hover:text-indigo-400 hoverable underline decoration-1 underline-offset-8">LinkedIn Profile ↗</a>
-                </div>
-                <p class="text-gray-700 text-sm font-mono">© 2024 Jasnoor Saluja.</p>
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- JAVASCRIPT -->
-    <script>
-        // 1. CURSOR
-        const cursor = document.getElementById('cursor');
-        const hoverables = document.querySelectorAll('.hoverable');
-
-        // Only enable custom cursor on desktop to avoid touch issues
-        if (window.matchMedia("(min-width: 768px)").matches) {
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-
-            hoverables.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
-        }
-
-        // 2. PARALLAX FOR SCROLLING CARDS
-        // This makes the gallery items move at different speeds relative to the scroll
-        const parallaxCards = document.querySelectorAll('.parallax-card');
-        
-        window.addEventListener('scroll', () => {
-            if (window.innerWidth < 768) return; 
-
-            const scrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
             
-            // Optimization: Only animate if we are roughly in the gallery section
-            if (scrollY > windowHeight * 0.5) {
-                parallaxCards.forEach(card => {
-                    const speed = parseFloat(card.getAttribute('data-speed')) || 0;
-                    // Calculate relative scroll from when content starts appearing
-                    const relativeScroll = scrollY - windowHeight;
-                    card.style.transform = `translateY(${relativeScroll * speed}px)`;
-                });
-            }
-        });
+            <!-- Inner circle with text -->
+            <div class="circle circle-inner">
+                <div class="circle-center-text">
+                    CRAFTING<br>VISUAL<br>STORIES
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // 3. DRAGGABLE LOGIC FOR FIXED HERO
-        const draggables = document.querySelectorAll('.draggable');
-        let isDragging = false;
-        let currentDraggable = null;
-        let startX, startY, initialLeft, initialTop;
+    <!-- ============================================
+         MARQUEE - Reverse Direction (Dark)
+         ============================================ -->
+    <section class="marquee-section dark reverse">
+        <div class="marquee-track">
+            <div class="marquee-content">
+                <span class="marquee-item">Instagram</span>
+                <span class="marquee-item">TikTok</span>
+                <span class="marquee-item">YouTube</span>
+                <span class="marquee-item">Reels</span>
+                <span class="marquee-item">Shorts</span>
+                <span class="marquee-item">Campaigns</span>
+                <span class="marquee-item">Viral Content</span>
+                <span class="marquee-item">Engagement</span>
+            </div>
+        </div>
+    </section>
 
-        draggables.forEach(el => {
-            el.addEventListener('mousedown', dragStart);
-        });
-
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-
-        function dragStart(e) {
-            if (window.innerWidth < 768) return; // Disable on mobile
-
-            // Since element is fixed, offsetLeft is relative to viewport
-            initialLeft = this.getBoundingClientRect().left;
-            initialTop = this.getBoundingClientRect().top;
-            startX = e.clientX;
-            startY = e.clientY;
+    <!-- ============================================
+         SERVICES SECTION - Slide In
+         ============================================ -->
+    <section id="services" class="scroll-section services-section">
+        <div class="section-header">
+            <p class="section-label slide-in">What I Do</p>
+            <h2 class="section-title slide-in" data-delay="1">EXPERTISE</h2>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card slide-in" data-delay="1">
+                <div class="service-icon"><i class="fas fa-video"></i></div>
+                <h3 class="service-title">Video Production</h3>
+                <p class="service-desc">End-to-end video production from concept development to final delivery.</p>
+            </div>
             
-            isDragging = true;
-            currentDraggable = this;
+            <div class="service-card slide-in" data-delay="2">
+                <div class="service-icon"><i class="fas fa-cut"></i></div>
+                <h3 class="service-title">Editing & Post</h3>
+                <p class="service-desc">Professional editing, color grading, and post-production services.</p>
+            </div>
             
-            // Z-index management
-            draggables.forEach(d => d.style.zIndex = 10);
-            this.style.zIndex = 100;
+            <div class="service-card slide-in" data-delay="3">
+                <div class="service-icon"><i class="fas fa-palette"></i></div>
+                <h3 class="service-title">Storyboarding</h3>
+                <p class="service-desc">Visual planning and narrative structure for compelling stories.</p>
+            </div>
+            
+            <div class="service-card slide-in from-right" data-delay="4">
+                <div class="service-icon"><i class="fas fa-share-alt"></i></div>
+                <h3 class="service-title">Social Media</h3>
+                <p class="service-desc">Platform-specific content optimized for engagement and reach.</p>
+            </div>
+            
+            <div class="service-card slide-in from-right" data-delay="5">
+                <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3 class="service-title">Content Marketing</h3>
+                <p class="service-desc">Strategic content that drives audience growth and conversions.</p>
+            </div>
+            
+            <div class="service-card slide-in from-right" data-delay="6">
+                <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                <h3 class="service-title">Digital Strategy</h3>
+                <p class="service-desc">Data-driven approach to maximize your digital presence.</p>
+            </div>
+        </div>
+    </section>
 
-            e.preventDefault();
-        }
+    <!-- ============================================
+         STATS SECTION - Slide In
+         ============================================ -->
+    <section class="scroll-section stats-section">
+        <div class="stats-grid">
+            <div class="stat-item slide-in from-bottom" data-delay="1">
+                <div class="stat-number" data-target="15">0+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item slide-in from-bottom" data-delay="2">
+                <div class="stat-number" data-target="2">0+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item slide-in from-bottom" data-delay="3">
+                <div class="stat-number" data-target="5">0+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-item slide-in from-bottom" data-delay="4">
+                <div class="stat-number" data-target="25000">0K+</div>
+                <div class="stat-label">Views</div>
+            </div>
+        </div>
+    </section>
 
-        function drag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
+    <!-- ============================================
+         MARQUEE - Projects (Light)
+         ============================================ -->
+    <section class="marquee-section">
+        <div class="marquee-track">
+            <div class="marquee-content">
+                <span class="marquee-item">Featured Work</span>
+                <span class="marquee-item">Recent Projects</span>
+                <span class="marquee-item">Case Studies</span>
+                <span class="marquee-item">Portfolio</span>
+                <span class="marquee-item">Creative Work</span>
+                <span class="marquee-item">Selected Projects</span>
+            </div>
+        </div>
+    </section>
 
-            const currentX = e.clientX;
-            const currentY = e.clientY;
-            const dx = currentX - startX;
-            const dy = currentY - startY;
+    <!-- ============================================
+         PROJECTS SECTION
+         ============================================ -->
+    <section id="projects" class="scroll-section projects-section">
+        <div class="section-header">
+            <p class="section-label slide-in">Portfolio</p>
+            <h2 class="section-title slide-in" data-delay="1">FEATURED<br>PROJECTS</h2>
+        </div>
+        
+        <div class="projects-grid">
+            <a href="https://www.instagram.com/reel/DHBWYqbMLMK/" target="_blank" class="project-card slide-in" data-delay="1">
+                <img src="images/project1.jpg" alt="Instagram Reel">
+                <div class="project-overlay">
+                    <h3 class="project-title">Instagram Reel</h3>
+                    <p class="project-category">Social Media • Production</p>
+                </div>
+            </a>
 
-            // Direct mapping because Fixed position is relative to viewport
-            currentDraggable.style.left = `${initialLeft + dx}px`;
-            currentDraggable.style.top = `${initialTop + dy}px`;
-        }
+            <a href="https://www.instagram.com/reel/DEkLYkBpfUV/" target="_blank" class="project-card slide-in from-right" data-delay="2">
+                <img src="images/project2.jpg" alt="Creative Content">
+                <div class="project-overlay">
+                    <h3 class="project-title">Creative Content</h3>
+                    <p class="project-category">Video • Editing</p>
+                </div>
+            </a>
 
-        function dragEnd() {
-            isDragging = false;
-            currentDraggable = null;
-        }
-    </script>
+            <a href="https://www.instagram.com/reel/DFtAvD1p38y/" target="_blank" class="project-card slide-in" data-delay="3">
+                <img src="images/project3.jpg" alt="Production">
+                <div class="project-overlay">
+                    <h3 class="project-title">Shooting & Editing</h3>
+                    <p class="project-category">Digital Content Assistant</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8PQkQ5/" target="_blank" class="project-card slide-in from-right" data-delay="4">
+                <img src="images/project4.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">TikTok Content</h3>
+                    <p class="project-category">Digital Assistant • Social</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8fcmNP/" target="_blank" class="project-card slide-in" data-delay="5">
+                <img src="images/project5.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">TikTok Campaign</h3>
+                    <p class="project-category">Content Creation</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8PMMrm/" target="_blank" class="project-card slide-in from-right" data-delay="6">
+                <img src="images/project6.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">Digital Content</h3>
+                    <p class="project-category">TikTok • Strategy</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8f7yog/" target="_blank" class="project-card slide-in" data-delay="7">
+                <img src="images/project7.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">Social Media</h3>
+                    <p class="project-category">TikTok • Production</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8P8o9N/" target="_blank" class="project-card slide-in from-right" data-delay="8">
+                <img src="images/project8.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">Viral Content</h3>
+                    <p class="project-category">TikTok • Trending</p>
+                </div>
+            </a>
+
+            <a href="https://vt.tiktok.com/ZSa8PVNxv/" target="_blank" class="project-card slide-in" data-delay="9">
+                <img src="images/project9.jpg" alt="TikTok">
+                <div class="project-overlay">
+                    <h3 class="project-title">Creative Strategy</h3>
+                    <p class="project-category">TikTok • Engagement</p>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/reel/CzPvjSEOeTs/" target="_blank" class="project-card slide-in from-right" data-delay="10">
+                <img src="images/project10.jpg" alt="Volunteer Work">
+                <div class="project-overlay">
+                    <h3 class="project-title">Volunteer Event</h3>
+                    <p class="project-category">Shooting & Editing</p>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/reel/DPYPlCsDs4Z/" target="_blank" class="project-card slide-in" data-delay="11">
+                <img src="images/project11.jpg" alt="Volunteer Work">
+                <div class="project-overlay">
+                    <h3 class="project-title">Community Coverage</h3>
+                    <p class="project-category">Shooting & Editing</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================
+         ABOUT SECTION
+         ============================================ -->
+    <section id="about" class="scroll-section about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <p class="section-label slide-in">About Me</p>
+                <h2 class="slide-in" data-delay="1">CREATIVE<br>STUDIO</h2>
+                <p class="slide-in" data-delay="2">Moved to Canada 4 years ago with a deep passion for visual storytelling and narrative design. I specialize in creating compelling content that resonates with audiences across all platforms.</p>
+                <p class="slide-in" data-delay="3">From concept to execution, I bring stories to life through careful storyboarding, cinematography, and editing. Every frame is crafted with intention to create maximum impact.</p>
+            </div>
+            <div class="about-image slide-in from-right" data-delay="2">
+                <img src="images/about-jasnoor.jpg" alt="Jasnoor">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         MARQUEE - Contact (Dark)
+         ============================================ -->
+    <section class="marquee-section dark">
+        <div class="marquee-track">
+            <div class="marquee-content">
+                <span class="marquee-item">Let's Work Together</span>
+                <span class="marquee-item">Get In Touch</span>
+                <span class="marquee-item">Start a Project</span>
+                <span class="marquee-item">Say Hello</span>
+                <span class="marquee-item">Collaborate</span>
+                <span class="marquee-item">Connect</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CONTACT SECTION
+         ============================================ -->
+    <section id="contact" class="contact-section">
+        <h2 class="contact-title slide-in">LET'S<br>TALK</h2>
+        
+        <div class="contact-links slide-in" data-delay="1">
+            <a href="mailto:salujajasnoor1603@gmail.com" class="contact-link">salujajasnoor1603@gmail.com</a>
+        </div>
+        
+        <div class="social-links slide-in" data-delay="2">
+            <a href="https://www.instagram.com/" target="_blank" class="social-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/jasnoor-saluja-03740b1b9/" target="_blank" class="social-icon">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://www.tiktok.com/" target="_blank" class="social-icon">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://www.youtube.com/" target="_blank" class="social-icon">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer>
+        <p>© 2024 Jasnoor Saluja. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js?v=3"></script>
 </body>
 </html>
